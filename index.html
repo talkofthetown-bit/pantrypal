@@ -1,0 +1,463 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Pantry Pal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,600..800,0..100;1,9..144,600..800,0..100&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--fox:#F5533D;--fox-d:#C93A27;--fox-s:#FFE1DA;--cream:#FFF8EA;--cream2:#FFEFD2;--ink:#3A2218;--muted:#80604F;--line:#F2DEBF;--leaf:#4CB05A;--leaf-d:#348A41;--leaf-s:#DDF4DF;--sky:#FFE9B0;--sky-d:#E5A81C;--plum:#2F1B14;--plum2:#4A2D22;--sun:#FFD45C;--bad:#E5484D;--bad-s:#FFE3E3;color-scheme:light}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:18px;line-height:1.55;font-weight:600;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:800;line-height:1.06;letter-spacing:-.02em;margin:0;text-wrap:balance}
+p{margin:0}a{color:inherit}img,svg{max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+em{font-style:italic;color:var(--fox-d)}
+.dark em{color:var(--sun)}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--fox-d);margin-bottom:14px}
+.dark .eyebrow{color:var(--sun)}
+/* chunky duolingo buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:18px;padding:15px 28px;font:800 16px 'Nunito',sans-serif;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;cursor:pointer;background:var(--leaf);color:#fff;box-shadow:0 5px 0 var(--leaf-d);transition:transform .08s,box-shadow .08s}
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--leaf-d)}
+.btn.tom{background:var(--fox);box-shadow:0 5px 0 var(--fox-d)}.btn.tom:active{box-shadow:0 1px 0 var(--fox-d)}.btn.fox{background:var(--fox);box-shadow:0 5px 0 var(--fox-d)}
+.btn.fox:active{box-shadow:0 1px 0 var(--fox-d)}
+.btn.line{background:#fff;color:var(--fox-d);box-shadow:0 5px 0 var(--line),inset 0 0 0 2px var(--line)}
+.btn.line:active{box-shadow:0 1px 0 var(--line),inset 0 0 0 2px var(--line)}
+.btn.sm{padding:11px 20px;font-size:14px;border-radius:14px;box-shadow:0 4px 0 var(--leaf-d)}
+.btn[disabled]{background:#E7DACB;color:#B5A290;box-shadow:0 5px 0 #D5C6B3;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--sky-d);outline-offset:3px}
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(255,248,238,.92);backdrop-filter:blur(12px);border-bottom:2px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:28px;height:76px}
+.logo{display:flex;align-items:center;gap:10px;font:800 28px 'Fraunces',serif;text-decoration:none;letter-spacing:-.03em;color:var(--fox-d)}
+.logo svg{width:40px;height:40px}
+.nav nav{display:flex;gap:26px;flex:1}
+.nav nav a{text-decoration:none;font-weight:700;font-size:16px;color:var(--ink)}
+.nav nav a:hover{color:var(--fox-d)}
+.burger{display:none;width:46px;height:46px;border-radius:14px;border:2px solid var(--line);background:#fff;cursor:pointer;margin-left:auto}
+.burger i{display:block;width:18px;height:2.5px;background:var(--ink);margin:4px auto;border-radius:2px}
+/* hero */
+.hero{padding:64px 0 90px;position:relative;overflow-x:clip}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(42px,6vw,76px)}
+.hero p.lead{font-size:20px;color:var(--muted);margin:22px 0 28px;max-width:30em}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.langs{margin-top:34px}
+.langs small{display:block;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;font:800 15px 'Nunito',sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 3px 0 var(--line);transition:transform .08s}
+.chip:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.chip[aria-pressed="true"]{background:var(--sky);border-color:var(--sky-d);box-shadow:0 3px 0 var(--sky-d);color:#7A4B00}
+.stage{position:relative;min-height:440px;display:grid;place-items:center;background:var(--sky);border-radius:44px;box-shadow:inset 0 0 0 3px #FFD777;overflow:hidden}
+.stage:before{content:"";position:absolute;left:0;right:0;bottom:0;height:30%;background:#FFD27A;border-radius:0 0 44px 44px}
+.stage:after{content:"";position:absolute;left:-6%;right:-6%;bottom:26%;height:70px;background:#FFD27A;border-radius:50% 50% 0 0}
+.fox{position:relative;z-index:2;width:min(330px,72%);animation:bob 5s ease-in-out infinite}
+.fox svg{width:100%;height:auto;display:block;overflow:visible}
+.wob{transform-origin:100px 170px;animation:wag 3s ease-in-out infinite}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+@keyframes wag{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
+.bub{position:absolute;z-index:3;background:#fff;color:var(--ink);border-radius:22px;padding:12px 20px;font-weight:800;font-size:18px;box-shadow:0 5px 0 rgba(58,36,24,.12);line-height:1.3;max-width:70%}
+.bub:after{content:"";position:absolute;width:18px;height:18px;background:#fff;transform:rotate(45deg);border-radius:3px;z-index:-1}
+.bub.one{left:5%;top:9%;transform:rotate(-3deg);font-size:26px;font-family:'Fraunces',serif}
+.bub.one:after{bottom:-7px;left:44px}
+.bub.two{right:5%;bottom:14%;background:var(--sun);transform:rotate(2deg);font-size:16px}
+.bub.two:after{background:var(--sun);top:-7px;right:38px}
+.pop{position:absolute;z-index:3;right:8%;top:13%;background:#fff;border-radius:16px;padding:8px 14px;font-weight:800;font-size:15px;color:var(--fox-d);box-shadow:0 4px 0 rgba(58,36,24,.12);transform:rotate(4deg)}
+/* sections */
+section{padding:96px 0}
+section.alt{background:var(--cream2)}
+section.dark{background:var(--plum);color:#fff}
+section h2{font-size:clamp(34px,4.4vw,56px)}
+.head{max-width:720px;margin-bottom:46px}
+.head p{color:var(--muted);margin-top:16px;font-size:19px}
+.dark .head p{color:#D9C6D3}
+/* lesson */
+.lesson-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:center}
+.phone{background:#fff;border-radius:34px;box-shadow:0 8px 0 var(--line),0 30px 60px -30px rgba(58,36,24,.35);border:2px solid var(--line);overflow:hidden;max-width:470px;margin:0 auto;width:100%}
+.ph-top{display:flex;align-items:center;gap:14px;padding:20px 22px 8px}
+.bar{flex:1;height:16px;background:#EADFD2;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--leaf);border-radius:99px;transition:width .4s;position:relative}
+.bar i:after{content:"";position:absolute;left:8px;right:8px;top:3px;height:4px;background:rgba(255,255,255,.45);border-radius:4px}
+.hearts{font-weight:800;color:var(--bad);white-space:nowrap}
+.ph-body{padding:14px 24px 22px;min-height:360px}
+.q-tag{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--sky-d)}
+.q{font:800 26px 'Fraunces',serif;margin:6px 0 18px;line-height:1.15}
+.ask{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.ask svg{width:74px;flex:none}
+.ask .bb{border:2px solid var(--line);border-radius:18px;padding:12px 16px;font-weight:800;font-size:19px;position:relative}
+.opts{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;border:2px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff;font:800 18px 'Nunito',sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 4px 0 var(--line)}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt b{width:30px;height:30px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;font-size:14px;color:var(--muted);flex:none}
+.opt.sel{background:var(--sky);border-color:var(--sky-d);box-shadow:0 4px 0 var(--sky-d)}
+.opt.sel b{border-color:var(--sky-d);color:#7A4B00}
+.opt.right{background:var(--leaf-s);border-color:var(--leaf);box-shadow:0 4px 0 var(--leaf)}
+.opt.wrong{background:var(--bad-s);border-color:var(--bad);box-shadow:0 4px 0 var(--bad)}
+.opt[disabled]{pointer-events:none}
+.foot{border-top:2px solid var(--line);padding:18px 24px 22px;transition:background .2s}
+.foot.ok{background:var(--leaf-s)}.foot.no{background:var(--bad-s)}
+.fb{display:none;font-weight:800;margin-bottom:12px}
+.foot.ok .fb{display:block;color:var(--leaf-d)}.foot.no .fb{display:block;color:var(--bad)}
+.foot .btn{width:100%}
+.foot.no .btn{background:var(--bad);box-shadow:0 5px 0 #B3262B}
+.done-card{text-align:center;padding:20px 6px}
+.done-card svg{width:150px}
+.done-card h3{font-size:32px;margin:8px 0}
+.done-card .xp{display:flex;gap:12px;justify-content:center;margin:18px 0}
+.done-card .xp span{border:2px solid var(--sun);background:#FFF4D1;border-radius:14px;padding:8px 16px;font-weight:800;color:#8A5A00}
+.lesson-copy ul{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:16px}
+.lesson-copy li{display:flex;gap:14px;align-items:flex-start;color:var(--muted)}
+.lesson-copy li b{color:var(--ink)}
+.tick{flex:none;width:30px;height:30px;border-radius:50%;background:var(--leaf);color:#fff;display:grid;place-items:center;font-size:16px;margin-top:2px}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s}
+.step{background:#fff;border:2px solid var(--line);border-radius:28px;padding:30px;box-shadow:0 6px 0 var(--line);counter-increment:s}
+.step:before{content:counter(s);display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--fox);color:#fff;font:800 22px 'Fraunces',serif;margin-bottom:18px;box-shadow:0 4px 0 var(--fox-d)}
+.step h3{font-size:25px;margin-bottom:10px}
+.step p{color:var(--muted)}
+/* languages */
+.lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.lang{background:#fff;border:2px solid var(--line);border-radius:24px;padding:22px;display:flex;align-items:center;gap:16px;box-shadow:0 5px 0 var(--line)}
+.lang .g{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;font:800 22px 'Fraunces',serif;flex:none}
+.lang h4{font-size:22px}.lang span{font-size:15px;color:var(--muted)}
+.c1{background:#FFD9C2;color:#B6420B}.c2{background:#CDE9FF;color:#14578C}.c3{background:#D8F3DC;color:#1F7A33}.c4{background:#FFE8A6;color:#8A5A00}.c5{background:#EBD9FF;color:#5E2BA3}.c6{background:#FFD3DE;color:#A3123F}
+/* streak */
+.streak{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.week{display:flex;gap:10px;margin:28px 0}
+.day{flex:1;text-align:center;font-weight:800;font-size:13px;color:#D9C6D3}
+.day i{display:grid;place-items:center;height:52px;border-radius:16px;margin-bottom:8px;background:var(--plum2);font-style:normal;font-size:22px}
+.day.on i{background:var(--fox)}
+.day.today i{background:var(--sun);box-shadow:0 0 0 4px rgba(255,209,102,.3)}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.num{background:var(--plum2);border-radius:20px;padding:20px}
+.num b{display:block;font:800 36px 'Fraunces',serif;color:var(--sun)}
+.num span{font-size:14px;color:#D9C6D3}
+/* stories */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.quote{background:#fff;border:2px solid var(--line);border-radius:28px;padding:28px;box-shadow:0 6px 0 var(--line);display:flex;flex-direction:column;gap:18px}
+.quote p{font-size:19px;line-height:1.5}
+.who{display:flex;align-items:center;gap:12px;margin-top:auto}
+.av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px}
+.who b{display:block;line-height:1.2}.who span{font-size:14px;color:var(--muted)}
+/* pricing */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:860px}
+.plan{background:#fff;border:2px solid var(--line);border-radius:30px;padding:34px;box-shadow:0 7px 0 var(--line);display:flex;flex-direction:column;gap:16px}
+.plan.pro{border-color:var(--fox);box-shadow:0 7px 0 var(--fox-d)}
+.plan .tag{align-self:flex-start;background:var(--fox);color:#fff;border-radius:99px;padding:4px 14px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.plan h3{font-size:28px}
+.price{font:800 46px 'Fraunces',serif}.price small{font:700 16px 'Nunito',sans-serif;color:var(--muted)}
+.plan ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;color:var(--muted)}
+.plan li:before{content:"✓";color:var(--leaf-d);font-weight:800;margin-right:10px}
+.plan .btn{margin-top:auto}
+/* faq */
+.faq{max-width:820px}
+details{background:#fff;border:2px solid var(--line);border-radius:20px;margin-bottom:12px;box-shadow:0 4px 0 var(--line)}
+summary{cursor:pointer;padding:20px 24px;font:800 20px 'Fraunces',serif;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";font:800 26px 'Nunito';color:var(--fox-d);line-height:1}
+details[open] summary:after{content:"–"}
+details p{padding:0 24px 22px;color:var(--muted)}
+/* join */
+.join .wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.join h2{color:#fff}
+.join p.lead{color:#D9C6D3;margin:16px 0 0;font-size:19px}
+.signup{background:var(--plum2);border-radius:30px;padding:30px;display:grid;gap:14px}
+.signup label{font-weight:800;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun)}
+.signup input,.signup select{width:100%;border:2px solid #5A3F54;background:var(--plum);color:#fff;border-radius:16px;padding:15px 16px;font:700 17px 'Nunito',sans-serif}
+.signup input::placeholder{color:#A58C9F}
+.signup input:focus,.signup select:focus{outline:none;border-color:var(--sun)}
+.signup .ok{display:none;text-align:center;padding:16px 6px}
+.signup .ok h3{color:#fff;font-size:30px;margin:10px 0}
+.foxsmall{width:120px;margin:0 auto}
+/* footer */
+footer{background:var(--plum);color:#D9C6D3;padding:50px 0 60px;border-top:2px solid var(--plum2)}
+footer .wrap{display:flex;gap:30px;justify-content:space-between;flex-wrap:wrap;align-items:flex-start}
+footer .logo{color:var(--sun)}
+footer p{font-size:14px;max-width:420px;margin-top:12px}
+footer nav{display:flex;gap:22px;flex-wrap:wrap}
+footer nav a{text-decoration:none;font-weight:700}
+footer nav a:hover{color:#fff}
+@media (prefers-reduced-motion:reduce){.fox,.wob,.eye{animation:none}html{scroll-behavior:auto}}
+@media (max-width:900px){
+ .nav nav{display:none;position:absolute;top:76px;left:0;right:0;background:var(--cream);flex-direction:column;gap:0;padding:8px 20px 18px;border-bottom:2px solid var(--line)}
+ .nav nav.open{display:flex}.nav nav a{padding:14px 0;border-bottom:2px solid var(--line)}
+ .nav .btn.sm{display:none}.burger{display:block}
+ .hero .wrap,.lesson-grid,.streak,.join .wrap{grid-template-columns:1fr}
+ .hero{padding-top:36px}.stage{min-height:380px}
+ .steps,.cards,.lgrid,.plans{grid-template-columns:1fr}
+ section{padding:70px 0}
+ .nums{grid-template-columns:1fr 1fr 1fr}
+}
+@media (max-width:480px){.num b{font-size:28px}.bub.one{font-size:21px}.pop{display:none}.week{gap:6px}}
+
+.app{display:grid;grid-template-columns:.85fr 1.15fr;gap:28px;align-items:start}
+.panel{background:#fff;border:2px solid var(--line);border-radius:30px;padding:28px;box-shadow:0 6px 0 var(--line)}
+.panel h3{font-size:26px;margin-bottom:6px}
+.sub{color:var(--muted);font-size:16px;margin-bottom:16px}
+.addrow{display:flex;gap:10px}
+.addrow input{flex:1;min-width:0;border:2px solid var(--line);border-radius:16px;padding:14px 16px;font:700 17px 'Nunito',sans-serif;color:var(--ink);background:var(--cream)}
+.addrow input:focus{outline:none;border-color:var(--sky-d)}
+.addrow .btn{padding:0 20px}
+.lbl{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px}
+.pchips{display:flex;gap:8px;flex-wrap:wrap}
+.pc{border:2px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font:800 15px 'Nunito',sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 3px 0 var(--line)}
+.pc:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.pc.on{background:var(--leaf-s);border-color:var(--leaf);box-shadow:0 3px 0 var(--leaf);color:#1F6B2C}
+.pc .x{margin-left:6px;opacity:.55}
+.empty{color:var(--muted);font-size:16px;padding:6px 0}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.filters select{width:100%;border:2px solid var(--line);border-radius:14px;padding:11px 12px;font:700 15px 'Nunito',sans-serif;color:var(--ink);background:var(--cream)}
+.clear{background:none;border:0;color:var(--fox-d);font:800 14px 'Nunito',sans-serif;cursor:pointer;text-decoration:underline;padding:0;margin-top:14px}
+.results h3{margin-bottom:4px}
+.rhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.rgrid{display:grid;gap:14px}
+.rc{background:#fff;border:2px solid var(--line);border-radius:26px;box-shadow:0 5px 0 var(--line);overflow:hidden}
+.rc.full{border-color:var(--leaf);box-shadow:0 5px 0 var(--leaf)}
+.rc-top{display:flex;gap:16px;padding:18px;align-items:flex-start}
+.rc-em{flex:none;width:68px;height:68px;border-radius:20px;background:var(--cream2);display:grid;place-items:center;font-size:36px}
+.rc-main{flex:1;min-width:0}
+.rc-main h4{font-size:21px;margin-bottom:4px}
+.badge{display:inline-block;border-radius:99px;padding:3px 12px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.badge.go{background:var(--leaf);color:#fff}.badge.near{background:var(--sun);color:#6B4300}
+.macros{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.macros span{background:var(--cream2);border-radius:10px;padding:3px 10px;font-size:14px;font-weight:800}
+.macros .kc{background:var(--fox-s);color:var(--fox-d)}
+.miss{font-size:15px;color:var(--muted)}
+.miss b{color:var(--fox-d)}
+.rc-btns{display:flex;gap:10px;padding:0 18px 18px;flex-wrap:wrap}
+.rc-btns .btn{padding:10px 18px;font-size:13px;border-radius:13px;box-shadow:0 4px 0 var(--leaf-d)}
+.rc-btns .btn.line{box-shadow:0 4px 0 var(--line),inset 0 0 0 2px var(--line)}
+.rc-btns .btn.done{background:var(--sun);color:#6B4300;box-shadow:0 4px 0 #D9A92E}
+.steps2{display:none;padding:0 18px 20px;border-top:2px dashed var(--line);margin:0 18px;padding:16px 0 4px}
+.rc.open .steps2{display:block}
+.steps2 ol{margin:8px 0 0;padding-left:22px;color:var(--muted)}.steps2 li{margin-bottom:6px}
+.steps2 .need{font-size:15px;color:var(--muted)}
+.none{text-align:center;padding:36px 12px;color:var(--muted)}
+.none .tm{width:110px;margin:0 auto 10px}
+.hows{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.show-more{margin-top:14px;width:100%}
+.nums .num b{color:var(--sun)}
+.cooked{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+@media (max-width:900px){.app,.hows{grid-template-columns:minmax(0,1fr)}.app>*{min-width:0}.filters{grid-template-columns:1fr 1fr 1fr}}
+@media (max-width:480px){.filters{grid-template-columns:1fr}.rc-top{gap:12px}.rc-em{width:56px;height:56px;font-size:30px}}
+.btn.sm.tom{box-shadow:0 4px 0 var(--fox-d)}
+</style></head><body>
+<header class="nav" id="nav"><div class="wrap">
+ <a class="logo" href="#top" aria-label="Pantry Pal home"><span data-tomo style="display:block;width:40px;height:40px"></span>pantry pal</a>
+ <nav id="menu" aria-label="Main">
+  <a href="#app">Find recipes</a><a href="#how">How it works</a><a href="#why">Why Pantry Pal</a><a href="#faq">FAQ</a>
+ </nav>
+ <a class="btn sm tom" href="#app">What can I make?</a>
+ <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap">
+ <div>
+  <div class="eyebrow">Cook with what you have</div>
+  <h1>What is in your fridge? <em>Let's cook.</em></h1>
+  <p class="lead">Add the ingredients you have and Pantry Pal finds recipes you can make right now, with calories and macros for every one. No more midnight scrolling.</p>
+  <div class="cta"><a class="btn tom" href="#app">Add my ingredients</a><a class="btn line" href="#how">How it works</a></div>
+  <div class="langs"><small>Or try a quick set</small>
+   <div class="chips" id="chips" role="group" aria-label="Quick sets"></div></div>
+ </div>
+ <div class="stage" aria-label="Tomo the tomato chef">
+  <div class="bub one" id="hello" aria-live="polite">Eggs? Cheese?</div>
+  <div class="pop">320 kcal</div>
+  <div class="fox" id="heroTomo" role="img" aria-label="Tomo, a happy tomato mascot"></div>
+  <div class="bub two" id="hellosub">Easy. Cheesy omelette.</div>
+ </div>
+</div></section>
+
+<section class="alt" id="app"><div class="wrap">
+ <div class="head"><div class="eyebrow">The kitchen</div><h2>Add it. <em>We find it.</em></h2><p>Type what is in your fridge or tap the quick picks. Salt, pepper, oil and water are always assumed.</p></div>
+ <div class="app">
+  <div class="panel">
+   <h3>Your pantry</h3><p class="sub">Add your ingredients one by one.</p>
+   <form class="addrow" id="addf"><label for="ing" style="position:absolute;left:-9999px">Ingredient</label><input id="ing" list="ingl" placeholder="e.g. eggs, rice, spinach" autocomplete="off"><datalist id="ingl"></datalist><button class="btn tom" type="submit">Add</button></form>
+   <div class="lbl">In your pantry</div>
+   <div class="pchips" id="mine" aria-live="polite"></div>
+   <div class="lbl">Quick add</div>
+   <div class="pchips" id="quick"></div>
+   <div class="lbl">Filters</div>
+   <div class="filters">
+    <label><span class="lbl" style="margin:0 0 4px;display:block">Diet</span><select id="fdiet"><option value="any">Any</option><option value="veg">Vegetarian</option><option value="vegan">Vegan</option></select></label>
+    <label><span class="lbl" style="margin:0 0 4px;display:block">Calories</span><select id="fcal"><option value="0">Any</option><option value="300">Up to 300</option><option value="400">Up to 400</option><option value="500">Up to 500</option></select></label>
+    <label><span class="lbl" style="margin:0 0 4px;display:block">Time</span><select id="ftime"><option value="0">Any</option><option value="15">Up to 15 min</option><option value="30">Up to 30 min</option></select></label>
+   </div>
+   <button class="clear" id="clear" type="button">Clear pantry</button>
+  </div>
+  <div class="results">
+   <div class="rhead"><div><h3 id="rtitle">Recipes for you</h3><div class="sub" id="rsub" style="margin:0"></div></div></div>
+   <div class="rgrid" id="rgrid" aria-live="polite"></div>
+  </div>
+ </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+ <div class="head"><div class="eyebrow">How it works</div><h2>Three taps. <em>Dinner sorted.</em></h2></div>
+ <div class="steps hows">
+  <div class="step"><h3>Add your ingredients</h3><p>Type them in or tap the quick picks. Whatever is in the fridge, cupboard or that sad bag at the back.</p></div>
+  <div class="step"><h3>See what you can cook</h3><p>We show recipes you can make now, plus ones where you are missing just one or two things.</p></div>
+  <div class="step"><h3>Check the numbers</h3><p>Every recipe shows calories, protein, carbs and fat per serving, so you know what you are eating.</p></div>
+ </div>
+</div></section>
+
+<section class="dark" id="why"><div class="wrap streak">
+ <div>
+  <div class="eyebrow">Why Pantry Pal</div>
+  <h2>Waste less. <em>Eat well.</em></h2>
+  <p style="color:#F0DCCD;margin-top:18px">Cook the food you already own before it goes off. Fewer shop runs, less binned food, and you always know roughly what is on your plate.</p>
+  <div class="cooked"><div class="num"><b id="cookedN">0</b><span>meals cooked this session</span></div></div>
+ </div>
+ <div class="nums">
+  <div class="num"><b>36</b><span>ingredients to pick from</span></div>
+  <div class="num"><b>28</b><span>recipes, and growing</span></div>
+  <div class="num"><b>1 tap</b><span>to see the macros</span></div>
+ </div>
+</div></section>
+
+<section class="alt" id="faq"><div class="wrap">
+ <div class="head"><div class="eyebrow">Questions</div><h2>Good <em>questions.</em></h2></div>
+ <div class="faq">
+  <details><summary>Do I need every ingredient?</summary><p>No. Recipes marked "Ready now" use only what you have. We also show near matches and list exactly what is missing.</p></details>
+  <details><summary>How accurate are the calories?</summary><p>They are estimates per serving using typical portion sizes. Your own amounts and brands will change the numbers a little.</p></details>
+  <details><summary>Does it count oil, salt and water?</summary><p>No. We assume you have salt, pepper, cooking oil and water, so you never have to add them.</p></details>
+  <details><summary>Can I filter for vegetarian or vegan?</summary><p>Yes. Pick a diet, a calorie limit or a max cooking time and the list updates straight away.</p></details>
+  <details><summary>Who is Tomo?</summary><p>A tomato with a lot of opinions about garlic. He lives in your pantry and cheers every time you cook.</p></details>
+ </div>
+</div></section>
+
+<section class="dark join" id="join"><div class="wrap">
+ <div><div class="eyebrow">Hungry?</div><h2>Get a fridge-friendly recipe <em>every week.</em></h2><p class="lead">One easy idea in your inbox on Sundays. No spam, just dinner.</p></div>
+ <form class="signup" id="signup" novalidate>
+  <label for="em">Email</label><input id="em" type="email" placeholder="you@email.com" autocomplete="email" required>
+  <label for="fv">I love</label>
+  <select id="fv"><option>Quick meals</option><option>High protein</option><option>Vegetarian</option><option>Comfort food</option></select>
+  <button class="btn tom" type="submit">Send me recipes</button>
+  <div id="err" style="color:#FFB4B4;font-weight:800;min-height:1.2em" role="alert"></div>
+  <div class="ok" id="ok"><div class="foxsmall" data-tomo></div><h3>Yum, you are in!</h3><p style="color:#F0DCCD">Tomo is already hunting for your first recipe.</p></div>
+ </form>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+ <div><a class="logo" href="#top"><span data-tomo style="display:block;width:40px;height:40px"></span>pantry pal</a>
+ <p>Pantry Pal is a fictional company. A fictional project by Aliza Munir. Calories are estimates.</p></div>
+ <nav aria-label="Footer"><a href="#app">Find recipes</a><a href="#how">How it works</a><a href="#why">Why Pantry Pal</a><a href="#faq">FAQ</a></nav>
+</div></footer>
+
+<script>
+var $=function(s,r){return (r||document).querySelector(s)};
+function tomo(anim){return '<svg viewBox="0 0 200 200" aria-hidden="true"><g'+(anim?' class="wob"':'')+'>'
+ +'<ellipse cx="100" cy="182" rx="52" ry="8" fill="#000" opacity=".08"/>'
+ +'<path d="M100 54C52 54 36 94 40 126C44 160 70 178 100 178C130 178 156 160 160 126C164 94 148 54 100 54Z" fill="#F5533D"/>'
+ +'<path d="M62 88Q66 72 80 66" stroke="#FF8A78" stroke-width="7" fill="none" stroke-linecap="round"/>'
+ +'<path d="M100 60L80 36L98 44L100 24L108 44L128 34L114 60Z" fill="#4CB05A"/><path d="M100 60L84 52L100 48Z" fill="#348A41"/>'
+ +'<ellipse class="eye" cx="78" cy="112" rx="7" ry="9.5" fill="#3A2218"/><ellipse class="eye" cx="122" cy="112" rx="7" ry="9.5" fill="#3A2218"/>'
+ +'<circle cx="80.5" cy="108.5" r="2.8" fill="#fff"/><circle cx="124.5" cy="108.5" r="2.8" fill="#fff"/>'
+ +'<ellipse cx="64" cy="130" rx="9" ry="6" fill="#FF9A8A" opacity=".7"/><ellipse cx="136" cy="130" rx="9" ry="6" fill="#FF9A8A" opacity=".7"/>'
+ +'<path d="M86 130Q100 148 114 130Z" fill="#7A1E12"/><path d="M92 138Q100 144 108 138" stroke="#FF8A78" stroke-width="4" fill="none" stroke-linecap="round"/>'
+ +'</g></svg>'}
+$('#heroTomo').innerHTML=tomo(true);
+[].forEach.call(document.querySelectorAll('[data-tomo]'),function(e){e.innerHTML=tomo(false)});
+
+/* data: n=name, e=emoji, t=min, k=kcal, p/c/f=g per serving, v=0 meat 1 veg 2 vegan, i=required, o=optional, s=steps */
+var R=[
+{n:'Cheesy Omelette',e:'🍳',t:10,k:320,p:21,c:2,f:25,v:1,i:['eggs','cheese'],o:['butter'],s:['Whisk 3 eggs with a pinch of salt.','Melt a little butter in a pan on medium heat.','Pour in the eggs, let the edges set, then add grated cheese.','Fold and slide onto a plate.']},
+{n:'Tomato Egg Scramble',e:'🍅',t:12,k:250,p:15,c:8,f:17,v:1,i:['eggs','tomato','onion'],o:[],s:['Fry chopped onion until soft.','Add diced tomato and cook 3 minutes.','Pour in beaten eggs and stir gently until just set.']},
+{n:'Garlic Butter Pasta',e:'🍝',t:20,k:520,p:15,c:74,f:18,v:1,i:['pasta','garlic','butter'],o:['cheese'],s:['Boil the pasta in salted water.','Melt butter and soften sliced garlic for 1 minute.','Toss the drained pasta in the pan. Add cheese if you have it.']},
+{n:'Simple Tomato Pasta',e:'🍝',t:25,k:460,p:14,c:85,f:7,v:2,i:['pasta','tomato','garlic','onion'],o:[],s:['Boil the pasta.','Fry onion and garlic, add chopped tomatoes.','Simmer 10 minutes, season, and stir through the pasta.']},
+{n:'Egg Fried Rice',e:'🍚',t:20,k:430,p:15,c:62,f:14,v:1,i:['rice','eggs','onion','carrot'],o:['soy sauce'],s:['Dice the onion and carrot and stir-fry until tender.','Push aside, scramble the eggs in the pan.','Add cooked rice and a splash of soy sauce. Toss until hot.']},
+{n:'Chicken Rice Bowl',e:'🍗',t:30,k:540,p:42,c:58,f:13,v:0,i:['chicken','rice','broccoli'],o:['garlic'],s:['Cook the rice.','Pan-fry sliced chicken until golden and cooked through.','Steam the broccoli and pile everything into a bowl.']},
+{n:'Chicken Noodle Stir-fry',e:'🍜',t:25,k:510,p:38,c:60,f:12,v:0,i:['chicken','noodles','bell pepper','soy sauce'],o:['garlic'],s:['Cook the noodles and drain.','Stir-fry chicken, then add sliced pepper.','Add noodles and soy sauce, toss for 2 minutes.']},
+{n:'Loaded Baked Potato',e:'🥔',t:45,k:380,p:12,c:52,f:14,v:1,i:['potato','cheese'],o:['butter'],s:['Prick the potato and bake at 200 C for 40 minutes.','Split it open and add butter.','Top with grated cheese and return to the oven for 3 minutes.']},
+{n:'Garlic Mushroom Toast',e:'🍄',t:15,k:290,p:9,c:32,f:14,v:1,i:['bread','mushroom','garlic'],o:['butter'],s:['Slice mushrooms and garlic.','Fry in butter until golden.','Pile onto toasted bread.']},
+{n:'Avocado Toast',e:'🥑',t:5,k:310,p:8,c:30,f:18,v:2,i:['bread','avocado'],o:['lemon','eggs'],s:['Toast the bread.','Mash the avocado with salt and a squeeze of lemon.','Spread it on top. Add a fried egg if you like.']},
+{n:'Veggie Quesadilla',e:'🌮',t:15,k:400,p:17,c:36,f:21,v:1,i:['tortilla','cheese','bell pepper','onion'],o:[],s:['Soften sliced pepper and onion in a pan.','Fill half a tortilla with veg and cheese, fold over.','Cook both sides until crisp and melty.']},
+{n:'Spinach Mushroom Frittata',e:'🥬',t:20,k:280,p:20,c:4,f:20,v:1,i:['eggs','spinach','mushroom','cheese'],o:[],s:['Fry mushrooms, then wilt in the spinach.','Pour over whisked eggs and top with cheese.','Cook on low until set, then grill 2 minutes.']},
+{n:'Banana Oat Pancakes',e:'🥞',t:15,k:290,p:11,c:45,f:7,v:1,i:['banana','oats','eggs'],o:['milk'],s:['Mash the banana and mix with oats and eggs.','Add a splash of milk if too thick.','Fry small pancakes 2 minutes each side.']},
+{n:'Overnight Oats',e:'🥣',t:5,k:340,p:11,c:56,f:8,v:1,i:['oats','milk','banana'],o:['honey'],s:['Stir oats and milk together in a jar.','Slice in the banana and drizzle honey.','Chill overnight or for at least 2 hours.']},
+{n:'Tuna Salad Bowl',e:'🥗',t:10,k:220,p:24,c:8,f:10,v:0,i:['tuna','cucumber','tomato'],o:['lemon'],s:['Chop the cucumber and tomato.','Flake in the tuna.','Dress with lemon juice and salt.']},
+{n:'Yogurt Parfait',e:'🍨',t:5,k:230,p:12,c:38,f:3,v:1,i:['yogurt','banana'],o:['oats','honey'],s:['Layer yogurt and sliced banana in a glass.','Top with oats and a drizzle of honey.']},
+{n:'Lentil Soup',e:'🍲',t:35,k:310,p:19,c:50,f:4,v:2,i:['lentils','carrot','onion','garlic'],o:[],s:['Soften chopped onion, carrot and garlic.','Add rinsed lentils and cover with water.','Simmer 25 minutes, season well and blend if you like.']},
+{n:'Quick Chickpea Curry',e:'🍛',t:30,k:380,p:14,c:58,f:9,v:2,i:['chickpeas','tomato','onion','garlic'],o:['rice'],s:['Fry onion and garlic until soft.','Add chopped tomato and a spoon of curry spice.','Stir in chickpeas and simmer 15 minutes. Serve with rice.']},
+{n:'Black Bean Burrito',e:'🌯',t:20,k:560,p:24,c:78,f:17,v:1,i:['beans','rice','tortilla','cheese'],o:[],s:['Warm the beans with a pinch of spice.','Fill the tortilla with rice, beans and cheese.','Roll up and toast seam-side down.']},
+{n:'Beef Bolognese',e:'🍝',t:35,k:640,p:36,c:70,f:22,v:0,i:['beef mince','pasta','tomato','onion'],o:['garlic'],s:['Brown the mince with chopped onion.','Add chopped tomato and simmer 20 minutes.','Boil the pasta and serve with the sauce.']},
+{n:'Zucchini Fritters',e:'🥒',t:20,k:260,p:12,c:18,f:15,v:1,i:['zucchini','eggs','flour'],o:['cheese'],s:['Grate the zucchini and squeeze out the water.','Mix with egg, flour and cheese.','Fry spoonfuls 3 minutes each side.']},
+{n:'Roasted Veg Tray',e:'🥕',t:40,k:280,p:7,c:48,f:8,v:2,i:['potato','carrot','broccoli','onion'],o:[],s:['Chop everything into chunky pieces.','Toss with oil and salt on a tray.','Roast at 200 C for 30 minutes.']},
+{n:'Garlic Mushroom Rice',e:'🍄',t:25,k:390,p:9,c:70,f:8,v:2,i:['rice','mushroom','garlic'],o:[],s:['Fry sliced mushrooms until browned.','Add garlic for 1 minute.','Stir through the cooked rice.']},
+{n:'Chicken Salad Wrap',e:'🌯',t:15,k:430,p:34,c:38,f:14,v:0,i:['chicken','tortilla','cucumber','yogurt'],o:[],s:['Slice cooked chicken and cucumber.','Mix with a spoon of yogurt.','Wrap it all up in the tortilla.']},
+{n:'Apple Cinnamon Oats',e:'🍎',t:10,k:320,p:9,c:58,f:6,v:1,i:['apple','oats','milk'],o:['honey'],s:['Dice the apple.','Simmer oats, milk and apple for 5 minutes.','Finish with cinnamon and honey.']},
+{n:'French Toast',e:'🍞',t:15,k:330,p:14,c:36,f:14,v:1,i:['bread','eggs','milk'],o:['sugar','butter'],s:['Whisk eggs with milk.','Soak the bread slices.','Fry in butter until golden on both sides.']},
+{n:'Honey Lemon Chicken',e:'🍋',t:30,k:380,p:40,c:14,f:16,v:0,i:['chicken','lemon','honey','garlic'],o:[],s:['Mix lemon juice, honey and crushed garlic.','Coat the chicken and let it sit 10 minutes.','Pan-fry or bake until cooked through.']},
+{n:'Potato Egg Hash',e:'🍳',t:25,k:360,p:13,c:42,f:15,v:1,i:['potato','eggs','onion'],o:[],s:['Dice the potato and parboil 5 minutes.','Fry with onion until crisp.','Make wells, crack in eggs and cover until set.']}
+];
+var ALL=[];R.forEach(function(r){r.i.concat(r.o).forEach(function(x){if(ALL.indexOf(x)<0)ALL.push(x)})});ALL.sort();
+var QUICK=['eggs','cheese','tomato','onion','garlic','rice','pasta','chicken','potato','bread','milk','banana','oats','spinach','mushroom','bell pepper','carrot','avocado'];
+var mine=[];
+var dl=$('#ingl');ALL.forEach(function(x){var o=document.createElement('option');o.value=x;dl.appendChild(o)});
+function add(x){x=x.trim().toLowerCase();if(!x)return false;
+ var alias={egg:'eggs',tomatoes:'tomato',onions:'onion',potatoes:'potato',carrots:'carrot',mushrooms:'mushroom',peppers:'bell pepper',pepper:'bell pepper','bell peppers':'bell pepper',bananas:'banana',apples:'apple',lemons:'lemon',beans:'beans','black beans':'beans',mince:'beef mince',beef:'beef mince',cheddar:'cheese',noodle:'noodles',zucchinis:'zucchini',courgette:'zucchini',chickpea:'chickpeas',lentil:'lentils',avocados:'avocado'};
+ x=alias[x]||x;if(mine.indexOf(x)<0)mine.push(x);return true}
+function toggleQ(x){var i=mine.indexOf(x);if(i<0)mine.push(x);else mine.splice(i,1);draw()}
+function draw(){
+ var m=$('#mine');m.innerHTML='';
+ if(!mine.length){m.innerHTML='<div class="empty">Nothing yet. Add something above.</div>'}
+ mine.forEach(function(x){var b=document.createElement('button');b.type='button';b.className='pc on';b.innerHTML=x+'<span class="x" aria-hidden="true">✕</span>';b.setAttribute('aria-label','Remove '+x);b.onclick=function(){mine.splice(mine.indexOf(x),1);draw()};m.appendChild(b)});
+ var q=$('#quick');q.innerHTML='';
+ QUICK.forEach(function(x){var b=document.createElement('button');b.type='button';b.className='pc'+(mine.indexOf(x)>=0?' on':'');b.textContent=x;b.setAttribute('aria-pressed',mine.indexOf(x)>=0);b.onclick=function(){toggleQ(x)};q.appendChild(b)});
+ results();
+}
+var showAll=false,cooked=0,openSet={};
+function results(){
+ var diet=$('#fdiet').value,cal=+$('#fcal').value,tm=+$('#ftime').value;
+ var list=R.filter(function(r){return (diet==='any'||(diet==='veg'&&r.v>=1)||(diet==='vegan'&&r.v===2))&&(!cal||r.k<=cal)&&(!tm||r.t<=tm)}).map(function(r){
+  var have=r.i.filter(function(x){return mine.indexOf(x)>=0}),miss=r.i.filter(function(x){return mine.indexOf(x)<0});
+  return {r:r,have:have.length,miss:miss,pct:have.length/r.i.length}});
+ var anyHave=list.filter(function(x){return x.have>0});
+ var ready=anyHave.filter(function(x){return !x.miss.length}),near=anyHave.filter(function(x){return x.miss.length&&x.miss.length<=2&&x.have>0}),rest=anyHave.filter(function(x){return x.miss.length>2});
+ function srt(a){a.sort(function(x,y){return y.pct-x.pct||x.miss.length-y.miss.length||x.r.k-y.r.k})}
+ srt(ready);srt(near);srt(rest);
+ var g=$('#rgrid'),out='';
+ if(!mine.length){$('#rtitle').textContent='Recipes for you';$('#rsub').textContent='Add a few ingredients to get started.';
+  g.innerHTML='<div class="panel none"><div class="tm">'+tomo(true)+'</div><b style="font:800 22px Fraunces,serif;color:var(--ink)">Tomo is waiting.</b><p>Tap a few quick picks on the left, or try a quick set at the top.</p></div>';return}
+ $('#rtitle').textContent=ready.length+' ready now';
+ $('#rsub').textContent=near.length+' almost there. Calories and macros are per serving.';
+ function card(x){var r=x.r,full=!x.miss.length;
+  return '<article class="rc'+(full?' full':'')+(openSet[r.n]?' open':'')+'" data-n="'+r.n+'"><div class="rc-top"><div class="rc-em" aria-hidden="true">'+r.e+'</div><div class="rc-main">'
+  +'<span class="badge '+(full?'go':'near')+'">'+(full?'Ready now':'Missing '+x.miss.length)+'</span><h4>'+r.n+'</h4>'
+  +'<div class="macros"><span class="kc">'+r.k+' kcal</span><span>P '+r.p+'g</span><span>C '+r.c+'g</span><span>F '+r.f+'g</span><span>'+r.t+' min</span></div>'
+  +(full?'<div class="miss">You have everything.'+(r.o.length?' Nice extras: '+r.o.join(', ')+'.':'')+'</div>':'<div class="miss">Missing: <b>'+x.miss.join(', ')+'</b></div>')
+  +'</div></div><div class="rc-btns"><button class="btn line" data-a="steps" type="button">'+(openSet[r.n]?'Hide steps':'Show steps')+'</button><button class="btn" data-a="cook" type="button">I cooked this</button></div>'
+  +'<div class="steps2"><b>Need:</b> <span class="need">'+r.i.join(', ')+(r.o.length?' (optional: '+r.o.join(', ')+')':'')+'. Plus salt, pepper and oil.</span><ol>'+r.s.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ol></div></article>'}
+ ready.forEach(function(x){out+=card(x)});
+ if(near.length){out+='<div class="lbl" style="margin:10px 0 0">Almost there</div>';near.forEach(function(x){out+=card(x)})}
+ if(!ready.length&&!near.length){out+='<div class="panel none"><b style="font:800 22px Fraunces,serif;color:var(--ink)">Nothing close yet.</b><p>Add one or two more ingredients, or loosen the filters.</p></div>'}
+ if(rest.length){if(showAll){out+='<div class="lbl" style="margin:10px 0 0">Needs more shopping</div>';rest.forEach(function(x){out+=card(x)})}else out+='<button class="btn line show-more" id="more" type="button">Show '+rest.length+' more with 3 or more missing</button>'}
+ g.innerHTML=out;
+ var mo=$('#more');if(mo)mo.onclick=function(){showAll=true;results()};
+ [].forEach.call(g.querySelectorAll('.rc'),function(c){
+  c.querySelector('[data-a="steps"]').onclick=function(){var n=c.dataset.n;openSet[n]=!openSet[n];c.classList.toggle('open');this.textContent=openSet[n]?'Hide steps':'Show steps'};
+  c.querySelector('[data-a="cook"]').onclick=function(){if(this.classList.contains('done'))return;this.classList.add('done');this.textContent='Yum! +10 XP';cooked++;$('#cookedN').textContent=cooked};
+ });
+}
+$('#addf').addEventListener('submit',function(e){e.preventDefault();var i=$('#ing');if(add(i.value)){i.value='';draw()}});
+['#fdiet','#fcal','#ftime'].forEach(function(s){$(s).onchange=results});
+$('#clear').onclick=function(){mine=[];showAll=false;draw()};
+/* hero sets */
+var SETS=[['Eggs + cheese + tomato',['eggs','cheese','tomato','onion'],'Eggs? Cheese?','Easy. Cheesy omelette.'],['Chicken + rice',['chicken','rice','broccoli','garlic'],'Chicken and rice!','A bowl. Done in 30.'],['Veggie night',['potato','carrot','onion','broccoli','mushroom','garlic','rice'],'Veggies galore!','Roast them all.']];
+var chips=$('#chips');
+SETS.forEach(function(s,i){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=s[0];b.setAttribute('aria-pressed','false');
+ b.onclick=function(){[].forEach.call(chips.children,function(c){c.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');$('#hello').textContent=s[2];$('#hellosub').textContent=s[3];mine=[];s[1].forEach(add);showAll=false;draw();document.getElementById('app').scrollIntoView({behavior:'smooth'})};chips.appendChild(b)});
+draw();
+/* nav + signup */
+var burger=$('#burger'),menu=$('#menu');
+burger.onclick=function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o)};
+[].forEach.call(menu.querySelectorAll('a'),function(a){a.onclick=function(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false')}});
+$('#signup').addEventListener('submit',function(e){e.preventDefault();var em=$('#em');
+ if(!em.checkValidity()||!em.value.trim()){$('#err').textContent='Add a real email so Tomo can find you.';em.focus();return}
+ $('#err').textContent='';[].forEach.call(this.children,function(c){if(c.id!=='ok')c.style.display='none'});$('#ok').style.display='block'});
+</script>
+</body></html>

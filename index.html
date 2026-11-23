@@ -242,6 +242,20 @@ footer nav a:hover{color:#fff}
 @media (max-width:900px){.app,.hows{grid-template-columns:minmax(0,1fr)}.app>*{min-width:0}.filters{grid-template-columns:1fr 1fr 1fr}}
 @media (max-width:480px){.filters{grid-template-columns:1fr}.rc-top{gap:12px}.rc-em{width:56px;height:56px;font-size:30px}}
 .btn.sm.tom{box-shadow:0 4px 0 var(--fox-d)}
+
+.hero.pp{background:linear-gradient(100deg,var(--cream) 0 56%,#FFDD94 56% 100%);padding:70px 0 90px}
+.hero.pp .wrap{grid-template-columns:1.05fr .95fr}
+.mockwrap{position:relative;padding:84px 0 24px}
+.mock{background:#fff;border:2px solid var(--line);border-radius:30px;box-shadow:0 8px 0 #E8C67A,0 30px 60px -30px rgba(58,34,24,.45);padding:24px;max-width:460px;margin:0 auto;position:relative;transform:rotate(1.6deg)}
+.mk-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.mk-h b{font:800 22px 'Fraunces',serif}.mk-h span{color:var(--muted);font-size:14px}
+.mk-arrow{text-align:center;font-weight:800;color:var(--fox-d);margin:14px 0 10px;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.mk-card{display:flex;gap:14px;align-items:center;border:2px solid var(--leaf);border-radius:20px;padding:14px;box-shadow:0 4px 0 var(--leaf);margin-bottom:12px}
+.mk-card.sm{border-color:var(--line);box-shadow:0 4px 0 var(--line);margin-bottom:0}
+.mk-em{flex:none;width:60px;height:60px;border-radius:18px;background:var(--cream2);display:grid;place-items:center;font-size:32px}
+.peek{position:absolute;right:4%;top:0;width:124px;z-index:3}
+.mockwrap .bub{z-index:4}.mockwrap .bub.one{left:0;top:6px;font-size:22px}.mockwrap .bub.two{right:-2%;bottom:-10px;left:auto}
+@media (max-width:900px){.hero.pp{background:linear-gradient(180deg,var(--cream) 0 54%,#FFDD94 54% 100%);padding-top:36px}.mockwrap{padding-top:70px}.mockwrap .bub.two{right:0}}
 </style></head><body>
 <header class="nav" id="nav"><div class="wrap">
  <a class="logo" href="#top" aria-label="Pantry Pal home"><span data-tomo style="display:block;width:40px;height:40px"></span>pantry pal</a>
@@ -253,7 +267,7 @@ footer nav a:hover{color:#fff}
 </div></header>
 
 <main id="top">
-<section class="hero"><div class="wrap">
+<section class="hero pp"><div class="wrap">
  <div>
   <div class="eyebrow">Cook with what you have</div>
   <h1>What is in your fridge? <em>Let's cook.</em></h1>
@@ -262,10 +276,16 @@ footer nav a:hover{color:#fff}
   <div class="langs"><small>Or try a quick set</small>
    <div class="chips" id="chips" role="group" aria-label="Quick sets"></div></div>
  </div>
- <div class="stage" aria-label="Tomo the tomato chef">
+ <div class="mockwrap">
+  <div class="peek" id="heroTomo" role="img" aria-label="Tomo the tomato peeking over the app"></div>
   <div class="bub one" id="hello" aria-live="polite">Eggs? Cheese?</div>
-  <div class="pop">320 kcal</div>
-  <div class="fox" id="heroTomo" role="img" aria-label="Tomo, a happy tomato mascot"></div>
+  <div class="mock">
+   <div class="mk-h"><b>Your pantry</b><span id="mkn">4 items</span></div>
+   <div class="pchips" id="mkchips"></div>
+   <div class="mk-arrow">↓ you can make</div>
+   <div class="mk-card"><div class="mk-em" id="mke">🍳</div><div><div class="badge go" style="margin-bottom:4px">Ready now</div><b id="mkr" style="font:800 20px Fraunces,serif;display:block">Cheesy Omelette</b><div class="macros" style="margin:6px 0 0"><span class="kc" id="mkk">320 kcal</span><span id="mkp">P 21g</span><span id="mkt">10 min</span></div></div></div>
+   <div class="mk-card sm"><div class="mk-em" style="width:46px;height:46px;font-size:24px">🍅</div><div><b style="font:800 17px Fraunces,serif">Tomato Egg Scramble</b><div class="miss">250 kcal &middot; 12 min</div></div></div>
+  </div>
   <div class="bub two" id="hellosub">Easy. Cheesy omelette.</div>
  </div>
 </div></section>
@@ -450,8 +470,11 @@ $('#clear').onclick=function(){mine=[];showAll=false;draw()};
 var SETS=[['Eggs + cheese + tomato',['eggs','cheese','tomato','onion'],'Eggs? Cheese?','Easy. Cheesy omelette.'],['Chicken + rice',['chicken','rice','broccoli','garlic'],'Chicken and rice!','A bowl. Done in 30.'],['Veggie night',['potato','carrot','onion','broccoli','mushroom','garlic','rice'],'Veggies galore!','Roast them all.']];
 var chips=$('#chips');
 SETS.forEach(function(s,i){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=s[0];b.setAttribute('aria-pressed','false');
- b.onclick=function(){[].forEach.call(chips.children,function(c){c.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');$('#hello').textContent=s[2];$('#hellosub').textContent=s[3];mine=[];s[1].forEach(add);showAll=false;draw();document.getElementById('app').scrollIntoView({behavior:'smooth'})};chips.appendChild(b)});
-draw();
+ b.onclick=function(){[].forEach.call(chips.children,function(c){c.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');$('#hello').textContent=s[2];$('#hellosub').textContent=s[3];mine=[];s[1].forEach(add);showAll=false;draw();mock(s[1])};chips.appendChild(b)});
+function mock(items){var mc=$('#mkchips');mc.innerHTML=items.map(function(x){return '<span class="pc on">'+x+'</span>'}).join('');$('#mkn').textContent=items.length+' items';
+ var best=null;R.forEach(function(r){var miss=r.i.filter(function(x){return items.indexOf(x)<0}).length;if(miss===0&&(!best||r.k>best.k))best=r});
+ if(best){$('#mke').textContent=best.e;$('#mkr').textContent=best.n;$('#mkk').textContent=best.k+' kcal';$('#mkp').textContent='P '+best.p+'g';$('#mkt').textContent=best.t+' min'}}
+mock(SETS[0][1]);draw();
 /* nav + signup */
 var burger=$('#burger'),menu=$('#menu');
 burger.onclick=function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o)};
